@@ -1,11 +1,11 @@
-default: sim
+﻿default: sim
 
 CXX = g++
 CXXFLAGS = -Wall -O0
 
 SIMHDRS = 
 SIMOBJS = sim.o
-SIMLIBS = 
+SIMLIBS = -lboost_program_options
 
 VISHDRS = 
 VISOBJS = vis.o
@@ -26,3 +26,4 @@ vis: $(VISOBJS)
 .PHONY: clean
 clean:
 	-rm -f *.o sim vis
+
