@@ -1,1 +1,7 @@
+/home/jf1519/FYP/FYP/Simulation.cpp
+/home/jf1519/FYP/FYP/Simulation.h
+/home/jf1519/FYP/FYP/Field.cpp
+/home/jf1519/FYP/FYP/Species.cpp
+/home/jf1519/FYP/FYP/Field.h
+/home/jf1519/FYP/FYP/Species.h
 /home/jf1519/FYP/FYP/sim.cpp

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <boost/program_options.hpp>
+#include "Simulation.h"
+#include "Species.h"
 
 namespace po = boost::program_options;
 
@@ -18,4 +20,9 @@ int main(int argc, char* argv[]) {
 	
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, opts), vm);
+	
+	Simulation sim(vm);
+	sim.run();
+	
+	return 0;
 }

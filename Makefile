@@ -3,8 +3,8 @@
 CXX = g++
 CXXFLAGS = -Wall -O0
 
-SIMHDRS = 
-SIMOBJS = sim.o
+SIMHDRS = Simulation.h Species.h Field.o
+SIMOBJS = sim.o Simulation.o Species.o Field.o
 SIMLIBS = -lboost_program_options
 
 VISHDRS = 
