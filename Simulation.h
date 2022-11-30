@@ -12,13 +12,13 @@ class Simulation
 private:
 	Field field;
 	std::vector<Species> species;
-	void initialize(int mode);
 	Field initializeField(const po::variables_map& vm);
 	std::vector<Species> initializeSpecies(const po::variables_map& vm);
+	float getTotalKineticEnergy() const;
 public:
 	Simulation(const po::variables_map& vm);
 	~Simulation();
-	void run();
+	void run(const po::variables_map& vm);
 };
 
 #endif // SIMULATION_H

@@ -26,14 +26,15 @@ public:
 	void initializePositions(float Lx); //For now only uniform
 	void initializeVelocities(float Kb, float T0); //For now only boltzmann
 	void advancePositions(float dt, float Lx);
-	void advanceVelocities(float dt, Field& field);
+	void advanceVelocities(float dt, const Field& field);
 	void calculateGridIndices(float dx, int Nx);
 	void calculateGridWeights(float dx);
-	const float* getV();
-	const int* getG();
-	const int* getGp();
-	const float* getWg();
-	const float* getWgp();
+	const float* getV() const;
+	const int* getG() const;
+	const int* getGp() const;
+	const float* getWg() const;
+	const float* getWgp() const;
+	float getKineticEnergy() const;
 };
 
 #endif // SPECIES_H

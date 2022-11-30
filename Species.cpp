@@ -74,32 +74,33 @@ Species::~Species(){
 void Species::initializePositions(float Lx){
 	std::srand(std::time(NULL));
 	for(int i = 0; i < Np; ++i){
-		x[i] = std::rand()/RAND_MAX*Lx;
+		x[i] = (float)std::rand()/RAND_MAX*Lx;
 	}
 }
 
 void Species::initializeVelocities(float Kb, float T0){
+	std::srand(std::time(NULL));
 	float a = m/(2*Kb*T0);
 	for(int i = 0; i < Np; ++i){
-		v[i] = math_helper::erfinv(2*std::rand()/RAND_MAX-1)/std::sqrt(a);
+		v[i] = math_helper::erfinv(2*(float)std::rand()/RAND_MAX-1)/std::sqrt(a);
 	}
 }
 
 void Species::advancePositions(float dt, float Lx){
 	//Solve finite-grid instability avoiding movement of more than dx
 	for(int i = 0; i < this->Np; ++i){
-		x[i] += v[i];
+		x[i] += v[i]*dt;
 		//Periodic boundary conditions
 		while (x[i] > Lx){
 			x[i] -= Lx;
 		}
-		while (x[i] < Lx){
+		while (x[i] < 0){
 			x[i] += Lx;
 		}
 	}
 }
 
-void Species::advanceVelocities(float dt, Field& field){
+void Species::advanceVelocities(float dt, const Field& field){
 	const double* E = field.getEt();
 	float beta = q/m*dt/2;
 	for(int i = 0; i < Np; ++i){
@@ -110,7 +111,11 @@ void Species::advanceVelocities(float dt, Field& field){
 void Species::calculateGridIndices(float dx, int Nx){
 	for(int i = 0; i < this->Np; ++i){
 		g[i] = std::floor(x[i]/dx);
-		gp[i] = g[i]+1 % Nx;
+		gp[i] = (g[i]+1) % Nx;
+		if(g[i]<0 || g[i]>=Nx || gp[i]<0 || gp[i]>=Nx){
+			std::cout << "Problemo, i = " << i << ", x[i] = " << x[i] << ", g[i] = " << g[i]<< std::endl;
+			break;
+		}
 	}
 }
 
@@ -121,23 +126,30 @@ void Species::calculateGridWeights(float dx){
 	}
 }
 
-const float* Species::getV(){
+const float* Species::getV() const{
 	return const_cast<float*>(this->v);
 }
 
-const int* Species::getG(){
+const int* Species::getG() const{
 	return const_cast<int*>(this->g);
 }
 
-const int* Species::getGp(){
+const int* Species::getGp() const{
 	return const_cast<int*>(this->gp);
 }
 
-const float* Species::getWg(){
+const float* Species::getWg() const{
 	return const_cast<float*>(this->wg);
 }
 
-const float* Species::getWgp(){
+const float* Species::getWgp() const{
 	return const_cast<float*>(this->wgp);
 }
 
+float Species::getKineticEnergy() const{
+	float output = 0;
+	for(int i = 0; i < Np; ++i){
+		output += v[i]*v[i];
+	}
+	return output*m/2;
+}
