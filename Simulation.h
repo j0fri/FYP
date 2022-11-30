@@ -12,8 +12,11 @@ class Simulation
 private:
 	Field field;
 	std::vector<Species> species;
+	void initialize(int mode);
+	Field initializeField(const po::variables_map& vm);
+	std::vector<Species> initializeSpecies(const po::variables_map& vm);
 public:
-	Simulation(po::variables_map vm);
+	Simulation(const po::variables_map& vm);
 	~Simulation();
 	void run();
 };

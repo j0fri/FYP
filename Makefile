@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -O0
 
 SIMHDRS = Simulation.h Species.h Field.o
 SIMOBJS = sim.o Simulation.o Species.o Field.o
-SIMLIBS = -lboost_program_options
+SIMLIBS = -lboost_program_options -lblas -llapack
 
 VISHDRS = 
 VISOBJS = vis.o

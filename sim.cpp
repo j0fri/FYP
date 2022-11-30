@@ -8,7 +8,7 @@ namespace po = boost::program_options;
 int main(int argc, char* argv[]) {
 	po::options_description opts("Available options.");
 	opts.add_options() 
-		("mode", po::value<int>()->default_value(1), "1 is Landau, 2 is two-stream")
+		("mode", po::value<int>(), "1 is Landau, 2 is two-stream")
 		("saveParticles", po::value<bool>()->default_value(false), "Save particle position.")
 		("saveEnergy", po::value<bool>()->default_value(false), "Save field and kinetic energy.")
 		("Nx", po::value<int>()->default_value(30), "Field grid discretization points in x.")

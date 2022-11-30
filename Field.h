@@ -24,6 +24,7 @@ private:
 	double* C;
 public:
 	Field(float Lx, int Nx, float c);
+	Field(const Field& other); //Copy constructor: copies onto new memory
 	~Field();
 	const double* getE();
 	const double* getEt();

@@ -3,6 +3,7 @@
 #include <math.h>
 #include "Field.h"
 #include "Species.h"
+#include <cstring>
 
 #define F77NAME(x) x##_
 extern "C" {
@@ -13,6 +14,17 @@ extern "C" {
 
 Field::Field(float Lx, int Nx, float c): Lx{Lx}, Nx{Nx}, dx{Lx/Nx}, c{c}{
 	this->E = new double[Nx];
+	this->Et = new double[Nx];
+	this->J = new float[Nx];
+	this->Mgg = new float[Nx];
+	this->Mggp = new float[Nx];
+	this->A = new double[Nx*Nx];
+	this->C = new double[Nx];
+}
+
+Field::Field(const Field& other): Lx{other.Lx}, Nx{other.Nx}, dx{other.dx}, c{other.c}{
+	this->E = new double[Nx];
+	std::memcpy(this->E, other.E, Nx*sizeof(double));
 	this->Et = new double[Nx];
 	this->J = new float[Nx];
 	this->Mgg = new float[Nx];

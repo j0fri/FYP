@@ -21,6 +21,7 @@ private:
 	//float* Bp; //No magnetic field in 1D1V simulation
 public:
 	Species(int Np, float m, float q);
+	Species(const Species& other); //Copy constructor: copies onto new memory
 	~Species();
 	void initializePositions(float Lx); //For now only uniform
 	void initializeVelocities(float Kb, float T0); //For now only boltzmann
