@@ -10,15 +10,16 @@ namespace po = boost::program_options;
 class Simulation
 {
 private:
-	Field field;
 	std::vector<Species> species;
-	Field initializeField(const po::variables_map& vm);
+	Field field;
+	
 	std::vector<Species> initializeSpecies(const po::variables_map& vm);
-	float getTotalKineticEnergy() const;
+	Field initializeField(const po::variables_map& vm);
 public:
 	Simulation(const po::variables_map& vm);
 	~Simulation();
 	void run(const po::variables_map& vm);
+	float getTotalKineticEnergy() const;
 };
 
 #endif // SIMULATION_H

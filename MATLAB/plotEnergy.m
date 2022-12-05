@@ -1,5 +1,5 @@
 M = readmatrix('energy.txt');
-
+            
 t = M(:,1);
 Ke = M(:,2);
 Pe = M(:,3);

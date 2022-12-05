@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="FYP" Version="11000" InternalType="">
   <VirtualDirectory Name="FYP">
+    <File Name="math_helper.cpp"/>
+    <File Name="math_helper.h"/>
     <File Name="Simulation.cpp"/>
     <File Name="Simulation.h"/>
     <File Name="Field.cpp"/>

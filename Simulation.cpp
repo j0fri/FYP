@@ -6,25 +6,62 @@
 #include <iostream>
 #include <fstream>
 
-Simulation::Simulation(const po::variables_map& vm): field(this->initializeField(vm)), species(this->initializeSpecies(vm)) {}
+Simulation::Simulation(const po::variables_map& vm): species(this->initializeSpecies(vm)), field(this->initializeField(vm)){}
 
 Simulation::~Simulation(){}
 
 Field Simulation::initializeField(const po::variables_map& vm){
+	if(!vm.count("mode")){
+		float Lx = vm["Lx"].as<float>();
+		int Nx = vm["Nx"].as<int>();
+		float c = vm["c"].as<float>();
+		float e0 = vm["e0"].as<float>();
+		bool saveInitial = vm["saveInitial"].as<bool>();
+		Field tempField{(float)Lx, Nx, (float)c, (float)e0};
+		tempField.initializeWithChargeDistribution(species, saveInitial);
+		//tempField.initializeFixed(0);
+		return tempField;
+	}
 	if(vm.count("mode") && vm["mode"].as<int>() == 1){
-		return Field(4*M_PI,30,1,1);
+		Field tempField{4*M_PI,30,1,1};
+		tempField.initializeFixed(0.5);
+		return tempField;	
 	}
 	return Field(0, 0, 0, 0);
 }
 
 std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
+	if(!vm.count("mode")){
+		int Np = vm["Np"].as<int>();
+		float Lx = vm["Lx"].as<float>();
+		float qe = vm["qe"].as<float>();
+		float qi = vm["qi"].as<float>();
+		float me = vm["me"].as<float>();
+		float mi = vm["mi"].as<float>();
+		float ue = vm["ue"].as<float>();
+		float ui = vm["ui"].as<float>();
+		float Kb = vm["Kb"].as<float>();
+		float T0 = vm["T0"].as<float>();
+		float rho0 = vm["rho0"].as<float>();
+		float ePertMag = vm["ePertMag"].as<float>();
+		std::vector<Species> tempSpecies{};
+		float scaling = Lx/(Np/2*std::fabs(qi)+Np/2*std::fabs(qe));
+		tempSpecies.emplace_back(Np/2, me*scaling, qe*scaling);
+		tempSpecies.emplace_back(Np/2, mi*scaling, qi*scaling);
+		tempSpecies[0].initializePositions(Lx, ePertMag/rho0); //Not sure is should divide rho0 as it's only electrons
+		tempSpecies[1].initializePositions(Lx, 0);
+		tempSpecies[0].initializeVelocities(Kb, T0, ue);
+		tempSpecies[1].initializeVelocities(Kb, T0, ui);
+		return tempSpecies;
+	}
 	if(vm.count("mode") && vm["mode"].as<int>() == 1){
 		std::vector<Species> tempSpecies{};
-		tempSpecies.emplace_back(5000, 1, -1);
-		tempSpecies.emplace_back(5000, 2000, 1);
+		float scaling = M_PI*4/10000;
+		tempSpecies.emplace_back(5000, 1*scaling, -1*scaling);
+		tempSpecies.emplace_back(5000, 2000*scaling, 1*scaling);
 		for (Species& s: tempSpecies){
-			s.initializePositions(4*M_PI);
-			s.initializeVelocities(0.001, 1);
+			s.initializePositions(4*M_PI, 0.0);
+			s.initializeVelocities(0.00001, 1, 0);
 		}
 		return tempSpecies;
 	}

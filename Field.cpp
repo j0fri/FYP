@@ -6,6 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 #define F77NAME(x) x##_
 extern "C" {
@@ -45,12 +46,44 @@ Field::~Field(){
 	delete[] this->C;
 }
 
-void Field::initialize(float pert){
+void Field::initializeFixed(float pert){
 	for(int i = 0; i<Nx; ++i){
 		E[i] = pert*std::sin(i*dx);
 	}
 	std::fill(Et, Et+Nx, 0);
 	std::fill(A, A+Nx*Nx, 0);	
+}
+
+void Field::initializeWithChargeDistribution(std::vector<Species>& species, bool saveInitial){
+	float* rhoDist = new float[Nx];
+	std::fill(rhoDist, rhoDist+Nx, 0);
+	
+	for(Species& s: species){
+		s.calculateGridIndices(dx, Nx);
+		const int* g = s.getG();
+		for(int i = 0; i < s.Np; ++i){
+			rhoDist[g[i]] += s.q/dx; 
+		}
+	}
+	
+	E[0] = 0;
+	double shifting = 0;
+	for(int i = 1; i < Nx; ++i){
+		E[i] = E[i-1] + rhoDist[i]/e0*dx; //Not sure if *dx
+		shifting += E[i]/Nx;
+	}
+	for(int i = 0; i < Nx; ++i){
+		E[i] -= shifting;
+	}
+	
+	if(saveInitial){
+		std::ofstream initialFile;
+		initialFile.open("MATLAB/initial.txt");
+		for(int i = 0; i < Nx; ++i){
+			initialFile << i*dx << " " << rhoDist[i] << " " << E[i] << std::endl;
+		}
+	}
+	delete[] rhoDist;
 }
 
 const double* Field::getE() const{

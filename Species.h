@@ -23,8 +23,8 @@ public:
 	Species(int Np, float m, float q);
 	Species(const Species& other); //Copy constructor: copies onto new memory
 	~Species();
-	void initializePositions(float Lx); //For now only uniform
-	void initializeVelocities(float Kb, float T0); //For now only boltzmann
+	void initializePositions(float Lx, float pertRho0);
+	void initializeVelocities(float Kb, float T0, float u); //For now only boltzmann
 	void advancePositions(float dt, float Lx);
 	void advanceVelocities(float dt, const Field& field);
 	void calculateGridIndices(float dx, int Nx);

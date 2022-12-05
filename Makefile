@@ -1,10 +1,10 @@
 ﻿default: sim
 
 CXX = g++
-CXXFLAGS = -Wall -O0
+CXXFLAGS = -Wall -O5
 
-SIMHDRS = Simulation.h Species.h Field.o
-SIMOBJS = sim.o Simulation.o Species.o Field.o
+SIMHDRS = Simulation.h Species.h Field.h math_helper.h
+SIMOBJS = sim.o Simulation.o Species.o Field.o math_helper.o
 SIMLIBS = -lboost_program_options -lblas -llapack
 
 VISHDRS = 

@@ -31,7 +31,8 @@ public:
 	~Field();
 	const double* getE() const;
 	const double* getEt() const;
-	void initialize(float pert);
+	void initializeFixed(float pert); //Initialize with a fixed sinusoidal perturbation
+	void initializeWithChargeDistribution(std::vector<Species>& species, bool saveInitial); //Initialize to satisfy Maxwell's divergence equation
 	void calculateJ(const std::vector<Species>& species); //Optimise: many operations to optimise in J calc.
 	void calculateM(const std::vector<Species>& species, float dt); //Optimise: join J and M calulation
 	void solve(double dt); //Optimise: a lot
