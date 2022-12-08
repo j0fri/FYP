@@ -1,6 +1,8 @@
 #ifndef SPECIES_H
 #define SPECIES_H
 
+#include <string>	
+
 //Forward declare due to circular dependency
 class Field;
 
@@ -24,7 +26,8 @@ public:
 	Species(const Species& other); //Copy constructor: copies onto new memory
 	~Species();
 	void initializePositions(float Lx, float pertRho0);
-	void initializeVelocities(float Kb, float T0, float u); //For now only boltzmann
+	void initializeVelocities(float Kb, float T0, float u, bool saveInitialVelocities); //For now only boltzmann
+	void initializeWithFile(std::string fileName); //Initializes both positions and velocities with the provided file
 	void advancePositions(float dt, float Lx);
 	void advanceVelocities(float dt, const Field& field);
 	void calculateGridIndices(float dx, int Nx);

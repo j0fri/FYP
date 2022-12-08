@@ -17,8 +17,15 @@ Field Simulation::initializeField(const po::variables_map& vm){
 		float c = vm["c"].as<float>();
 		float e0 = vm["e0"].as<float>();
 		bool saveInitial = vm["saveInitial"].as<bool>();
+		bool loadInitialField = vm["loadInitialField"].as<bool>();
 		Field tempField{(float)Lx, Nx, (float)c, (float)e0};
-		tempField.initializeWithChargeDistribution(species, saveInitial);
+		
+		if(!loadInitialField){
+			tempField.initializeWithChargeDistribution(species, saveInitial);
+		}else{
+			tempField.initializeWithFile();
+		}
+		
 		//tempField.initializeFixed(0);
 		return tempField;
 	}
@@ -44,14 +51,24 @@ std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
 		float T0 = vm["T0"].as<float>();
 		float rho0 = vm["rho0"].as<float>();
 		float ePertMag = vm["ePertMag"].as<float>();
+		bool saveInitialVelocities = vm["saveInitialVelocities"].as<bool>();
+		bool loadInitialParticles = vm["loadInitialParticles"].as<bool>();
+		
 		std::vector<Species> tempSpecies{};
 		float scaling = Lx/(Np/2*std::fabs(qi)+Np/2*std::fabs(qe));
 		tempSpecies.emplace_back(Np/2, me*scaling, qe*scaling);
 		tempSpecies.emplace_back(Np/2, mi*scaling, qi*scaling);
-		tempSpecies[0].initializePositions(Lx, ePertMag/rho0); //Not sure is should divide rho0 as it's only electrons
-		tempSpecies[1].initializePositions(Lx, 0);
-		tempSpecies[0].initializeVelocities(Kb, T0, ue);
-		tempSpecies[1].initializeVelocities(Kb, T0, ui);
+		
+		if(!loadInitialParticles){
+			tempSpecies[0].initializePositions(Lx, ePertMag/rho0); //Not sure is should divide rho0 as it's only electrons
+			tempSpecies[1].initializePositions(Lx, 0);
+			tempSpecies[0].initializeVelocities(Kb, T0, ue, saveInitialVelocities);
+			tempSpecies[1].initializeVelocities(Kb, T0, ui, saveInitialVelocities);
+		}else{
+			tempSpecies[0].initializeWithFile("MATLAB/initialElectrons.txt");
+			tempSpecies[1].initializeWithFile("MATLAB/initialIons.txt");
+		}
+		
 		return tempSpecies;
 	}
 	if(vm.count("mode") && vm["mode"].as<int>() == 1){
@@ -61,7 +78,7 @@ std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
 		tempSpecies.emplace_back(5000, 2000*scaling, 1*scaling);
 		for (Species& s: tempSpecies){
 			s.initializePositions(4*M_PI, 0.0);
-			s.initializeVelocities(0.00001, 1, 0);
+			s.initializeVelocities(0.00001, 1, 0, false);
 		}
 		return tempSpecies;
 	}

@@ -1,1 +1,1 @@
-Debug/sim.cpp.o Debug/Species.cpp.o Debug/Field.cpp.o Debug/Simulation.cpp.o
+Debug/math_helper.cpp.o Debug/sim.cpp.o Debug/Species.cpp.o Debug/Field.cpp.o Debug/Simulation.cpp.o

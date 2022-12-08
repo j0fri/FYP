@@ -10,6 +10,7 @@
 #include <iostream>
 #include <cstring>
 #include "math_helper.h"
+#include <fstream>
 
 Species::Species(int Np, float m, float q): Np{Np}, m{m}, q{q}{
 	this->x = new float[Np];
@@ -40,11 +41,18 @@ Species::~Species(){
 	delete[] this->wgp;
 }
 
+void Species::initializeWithFile(std::string fileName){
+	std::ifstream initialFile(fileName);
+	for(int i = 0; i < Np; ++i){
+		initialFile >> x[i] >> v[i];
+	}
+}
+
 void Species::initializePositions(float Lx, float pertRho0){
 	math_helper::generateSinePerturbedDistribution(x, Np, Lx, pertRho0);
 }
 
-void Species::initializeVelocities(float Kb, float T0, float u){
+void Species::initializeVelocities(float Kb, float T0, float u, bool saveInitialVelocities){
 	std::srand(std::time(NULL));
 	float a = m/(2*Kb*T0);
 	//float max = 0;
@@ -52,7 +60,14 @@ void Species::initializeVelocities(float Kb, float T0, float u){
 		v[i] = math_helper::erfinv(2*(float)std::rand()/RAND_MAX-1)/std::sqrt(a) + u;
 		//max = std::max(max, std::fabs(v[i]));
 	}
-	//std::cout << "max velocity magnitude: " << max << std::endl;	
+	//std::cout << "max velocity magnitude: " << max << std::endl;
+	if(saveInitialVelocities){
+		std::ofstream velocityFile;
+		velocityFile.open("MATLAB/initialVelocities.txt");
+		for(int i = 0; i < Np; ++i){
+			velocityFile << v[i] << std::endl;
+		}
+	}
 }
 
 void Species::advancePositions(float dt, float Lx){

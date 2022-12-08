@@ -14,7 +14,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Jordi Frittoli
-Date                   :=30/11/22
+Date                   :=08/12/22
 CodeLitePath           :=/home/jf1519/.codelite
 LinkerName             :=g++
 SharedObjectLinkerName :=g++ -shared -fPIC
@@ -62,7 +62,7 @@ AS       := as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/sim.cpp$(ObjectSuffix) $(IntermediateDirectory)/Species.cpp$(ObjectSuffix) $(IntermediateDirectory)/Field.cpp$(ObjectSuffix) $(IntermediateDirectory)/Simulation.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/math_helper.cpp$(ObjectSuffix) $(IntermediateDirectory)/sim.cpp$(ObjectSuffix) $(IntermediateDirectory)/Species.cpp$(ObjectSuffix) $(IntermediateDirectory)/Field.cpp$(ObjectSuffix) $(IntermediateDirectory)/Simulation.cpp$(ObjectSuffix) 
 
 
 
@@ -93,6 +93,11 @@ PreBuild:
 ##
 ## Objects
 ##
+$(IntermediateDirectory)/math_helper.cpp$(ObjectSuffix): math_helper.cpp
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/jf1519/FYP/FYP/math_helper.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/math_helper.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/math_helper.cpp$(PreprocessSuffix): math_helper.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/math_helper.cpp$(PreprocessSuffix) math_helper.cpp
+
 $(IntermediateDirectory)/sim.cpp$(ObjectSuffix): sim.cpp
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/jf1519/FYP/FYP/sim.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sim.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sim.cpp$(PreprocessSuffix): sim.cpp

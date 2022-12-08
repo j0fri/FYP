@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #define F77NAME(x) x##_
 extern "C" {
@@ -84,6 +85,19 @@ void Field::initializeWithChargeDistribution(std::vector<Species>& species, bool
 		}
 	}
 	delete[] rhoDist;
+	
+	std::fill(Et, Et+Nx, 0);
+	std::fill(A, A+Nx*Nx, 0);	
+}
+
+void Field::initializeWithFile(){
+	std::ifstream fieldFile("MATLAB/initialField.txt");
+	for(int i = 0; i < Nx; ++i){
+		fieldFile >> E[i];
+	}
+	fieldFile.close();
+	std::fill(Et, Et+Nx, 0);
+	std::fill(A, A+Nx*Nx, 0);	
 }
 
 const double* Field::getE() const{
