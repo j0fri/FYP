@@ -105,14 +105,14 @@ void Simulation::run(const po::variables_map& vm){
 	float dt;
 	bool saveEnergy;
 	
-	if(!vm.count("mode")){
-		T = vm["T"].as<float>();
-		dt = vm["dt"].as<float>();
-		saveEnergy = vm["saveEnergy"].as<bool>();
-	}else if(vm.count("mode") && vm["mode"].as<int>() == 1){
+	if(vm.count("mode") && vm["mode"].as<int>() == 1){
 		T = 10.0;
 		dt = 0.01;
 		saveEnergy = true;
+	}else{
+		T = vm["T"].as<float>();
+		dt = vm["dt"].as<float>();
+		saveEnergy = vm["saveEnergy"].as<bool>();
 	}
 	
 	std::ofstream energyFile;
