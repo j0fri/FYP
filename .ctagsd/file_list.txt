@@ -1,5 +1,3 @@
-/home/jf1519/FYP/FYP/math_helper.cpp
-/home/jf1519/FYP/FYP/math_helper.h
 /home/jf1519/FYP/FYP/sim.cpp
 /home/jf1519/FYP/FYP/Species.cpp
 /home/jf1519/FYP/FYP/Species.h
@@ -7,3 +5,5 @@
 /home/jf1519/FYP/FYP/Field.cpp
 /home/jf1519/FYP/FYP/Simulation.h
 /home/jf1519/FYP/FYP/Simulation.cpp
+/home/jf1519/FYP/FYP/math_helper.h
+/home/jf1519/FYP/FYP/math_helper.cpp

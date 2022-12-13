@@ -26,4 +26,9 @@ vis: $(VISOBJS)
 .PHONY: clean
 clean:
 	-rm -f *.o sim vis
+	
+#--Lx 12.56637
 
+.PHONY: landauFile
+landauFile: sim
+	./sim  --mode 1

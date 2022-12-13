@@ -18,7 +18,7 @@ figure(2);
 clf
 semilogy(t, Pe);
 hold on
-semilogy(t, Pe(1)*exp(-1.5e-2*t));
+semilogy(t, Pe(1)*exp(-5e-2*t));
 grid on
 xlabel('Time')
 ylabel('E^{2}')

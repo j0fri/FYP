@@ -52,9 +52,8 @@ void Species::initializePositions(float Lx, float pertRho0){
 	math_helper::generateSinePerturbedDistribution(x, Np, Lx, pertRho0);
 }
 
-void Species::initializeVelocities(float Kb, float T0, float u, bool saveInitialVelocities){
+void Species::initializeVelocities(float a, float u, bool saveInitialVelocities){
 	std::srand(std::time(NULL));
-	float a = m/(2*Kb*T0);
 	//float max = 0;
 	for(int i = 0; i < Np; ++i){
 		v[i] = math_helper::erfinv(2*(float)std::rand()/RAND_MAX-1)/std::sqrt(a) + u;

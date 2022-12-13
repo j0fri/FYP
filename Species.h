@@ -25,8 +25,8 @@ public:
 	Species(int Np, float m, float q);
 	Species(const Species& other); //Copy constructor: copies onto new memory
 	~Species();
-	void initializePositions(float Lx, float pertRho0);
-	void initializeVelocities(float Kb, float T0, float u, bool saveInitialVelocities); //For now only boltzmann
+	void initializePositions(float Lx, float pertRho0); //Perturbation in sine of rho0 for given species.
+	void initializeVelocities(float a, float u, bool saveInitialVelocities); //For now only boltzmann
 	void initializeWithFile(std::string fileName); //Initializes both positions and velocities with the provided file
 	void advancePositions(float dt, float Lx);
 	void advanceVelocities(float dt, const Field& field);

@@ -31,6 +31,11 @@ Field Simulation::initializeField(const po::variables_map& vm){
 	}
 	if(vm.count("mode") && vm["mode"].as<int>() == 1){
 		Field tempField{4*M_PI,30,1,1};
+		tempField.initializeWithChargeDistribution(species, false);
+		return tempField;
+	}
+	if(vm.count("mode") && vm["mode"].as<int>() == 2){
+		Field tempField{4*M_PI,30,1,1};
 		tempField.initializeFixed(0.5);
 		return tempField;	
 	}
@@ -60,11 +65,12 @@ std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
 		tempSpecies.emplace_back(Np/2, mi*scaling, qi*scaling);
 		
 		if(!loadInitialParticles){
-			tempSpecies[0].initializePositions(Lx, ePertMag/rho0); //Not sure is should divide rho0 as it's only electrons
+			tempSpecies[0].initializePositions(Lx, -ePertMag/rho0); //Not sure is should divide rho0 as it's only electrons
 			tempSpecies[1].initializePositions(Lx, 0);
-			tempSpecies[0].initializeVelocities(Kb, T0, ue, saveInitialVelocities);
-			tempSpecies[1].initializeVelocities(Kb, T0, ui, saveInitialVelocities);
+			tempSpecies[0].initializeVelocities(me/(2*Kb*T0), ue, saveInitialVelocities);
+			tempSpecies[1].initializeVelocities(mi/(2*Kb*T0), ui, saveInitialVelocities);
 		}else{
+			std::cout << "Loading particles from files" << std::endl;
 			tempSpecies[0].initializeWithFile("MATLAB/initialElectrons.txt");
 			tempSpecies[1].initializeWithFile("MATLAB/initialIons.txt");
 		}
@@ -73,12 +79,21 @@ std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
 	}
 	if(vm.count("mode") && vm["mode"].as<int>() == 1){
 		std::vector<Species> tempSpecies{};
+		float scaling = M_PI*4/100000;
+		tempSpecies.emplace_back(50000, 1*scaling, -1*scaling);
+		tempSpecies.emplace_back(50000, 2000*scaling, 1*scaling);
+		tempSpecies[0].initializeWithFile("MATLAB/initialElectrons.txt");
+		tempSpecies[1].initializeWithFile("MATLAB/initialIons.txt");
+		return tempSpecies;
+	}
+	if(vm.count("mode") && vm["mode"].as<int>() == 2){
+		std::vector<Species> tempSpecies{};
 		float scaling = M_PI*4/10000;
 		tempSpecies.emplace_back(5000, 1*scaling, -1*scaling);
 		tempSpecies.emplace_back(5000, 2000*scaling, 1*scaling);
 		for (Species& s: tempSpecies){
 			s.initializePositions(4*M_PI, 0.0);
-			s.initializeVelocities(0.00001, 1, 0, false);
+			s.initializeVelocities(1, 0, false);
 		}
 		return tempSpecies;
 	}
@@ -86,9 +101,19 @@ std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
 }
 
 void Simulation::run(const po::variables_map& vm){
-	float T = vm["T"].as<float>();
-	float dt = vm["dt"].as<float>();
-	bool saveEnergy = vm["saveEnergy"].as<bool>();
+	float T;
+	float dt;
+	bool saveEnergy;
+	
+	if(!vm.count("mode")){
+		T = vm["T"].as<float>();
+		dt = vm["dt"].as<float>();
+		saveEnergy = vm["saveEnergy"].as<bool>();
+	}else if(vm.count("mode") && vm["mode"].as<int>() == 1){
+		T = 10.0;
+		dt = 0.01;
+		saveEnergy = true;
+	}
 	
 	std::ofstream energyFile;
 	if(saveEnergy){
