@@ -32,3 +32,15 @@ clean:
 .PHONY: landauFile
 landauFile: sim
 	./sim  --mode 1
+	
+.PHONY: landau
+landauFile: sim
+	./sim  --mode 2
+	
+.PHONY: twoStreamFile
+landauFile: sim
+	./sim  --mode 3
+
+.PHONY: twoStream
+landauFile: sim
+	./sim  --mode 4

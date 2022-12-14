@@ -39,6 +39,16 @@ Field Simulation::initializeField(const po::variables_map& vm){
 		tempField.initializeFixed(0.5);
 		return tempField;	
 	}
+	if(vm.count("mode") && vm["mode"].as<int>() == 3){
+		Field tempField{4*M_PI,30,1,1};
+		tempField.initializeWithChargeDistribution(species, false);
+		return tempField;
+	}
+	if(vm.count("mode") && vm["mode"].as<int>() == 4){
+		Field tempField{4*M_PI,30,1,1};
+		tempField.initializeWithChargeDistribution(species, false);
+		return tempField;	
+	}
 	return Field(0, 0, 0, 0);
 }
 
@@ -93,8 +103,35 @@ std::vector<Species> Simulation::initializeSpecies(const po::variables_map& vm){
 		tempSpecies.emplace_back(5000, 2000*scaling, 1*scaling);
 		for (Species& s: tempSpecies){
 			s.initializePositions(4*M_PI, 0.0);
+			s.initializeVelocities(0.5, 0, false);
+		}
+		return tempSpecies;
+	}
+	if(vm.count("mode") && vm["mode"].as<int>() == 3){ //TODO: two-stream instability from file
+		std::vector<Species> tempSpecies{};
+		float scaling = M_PI*4/10000;
+		tempSpecies.emplace_back(5000, 1*scaling, -1*scaling);
+		tempSpecies.emplace_back(5000, 2000*scaling, 1*scaling);
+		for (Species& s: tempSpecies){
+			s.initializePositions(4*M_PI, 0.0);
 			s.initializeVelocities(1, 0, false);
 		}
+		return tempSpecies;
+	}
+	if(vm.count("mode") && vm["mode"].as<int>() == 4){ 
+		std::vector<Species> tempSpecies{};
+		float scaling = M_PI*4/100000;
+		tempSpecies.emplace_back(25000, 1*scaling, -1*scaling);
+		tempSpecies.emplace_back(25000, 1*scaling, -1*scaling);
+		tempSpecies.emplace_back(50000, 2000*scaling, 1*scaling);
+		for (Species& s: tempSpecies){
+			s.initializePositions(4*M_PI, 0.0);
+		}
+		double Kb = 0.00000000001;
+		double T0 = 1;
+		tempSpecies[0].initializeVelocities(1./(2*Kb*T0), 1, false);
+		tempSpecies[1].initializeVelocities(1./(2*Kb*T0), -1, false);
+		tempSpecies[2].initializeVelocities(2000./(2*Kb*T0), 0, false);
 		return tempSpecies;
 	}
 	return std::vector<Species>{};
